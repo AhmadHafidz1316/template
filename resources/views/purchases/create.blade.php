@@ -2,7 +2,9 @@
     <x-card>
         <form action="" method="post" enctype="multipart/form-data">
             <div class="grid grid-cols-3 gap-4">
+                @foreach ($product as $item)
 
+                @endforeach
                     <input type="hidden" name="harga[product-id]" value="harga">
                     <input type="hidden" name="nama_produk[product-id]" value="">
 
@@ -62,7 +64,7 @@
                             </p>
                         </div>
                     </div>
-                @endforeach
+
             </div>
             <br>
             <div class="flex flex-col-reverse">

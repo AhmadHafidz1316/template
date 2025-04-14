@@ -1,6 +1,6 @@
 <x-layout>
 
-        <div class="my-50">
+        {{-- <div class="my-50">
             <x-card>
                 <div class="text-center">
                     Total Penjualan Hari Ini
@@ -12,7 +12,7 @@
 
 
 
-        
+
         <div class="my-10 px-4">
             <x-card>
                 <h2 class="text-center text-lg font-bold mb-4">Grafik Penjualan {{ now()->year }}</h2>
@@ -84,6 +84,6 @@
                     }
                 }
             });
-        </script>
+        </script> --}}
 
 </x-layout>

@@ -1,12 +1,14 @@
 <x-layout>
     <x-card>
-        <form action="" method="post" enctype="multipart/form-data">
+        <form action="{{ route('updateProduct', $product->id) }}" method="post" enctype="multipart/form-data">
+            @csrf
+            @method('PATCH')
             <div class="flex gap-3 p-5">
                 <div class="w-1/2">
                     <label for="nama_produk" class="block mb-2 text-sm font-medium text-gray-900">Nama Produk</label>
                     <input type="text"
                         class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                        name="nama_produk" value="" />
+                        name="nama_produk" value="{{ $product->nama_produk }}" />
                 </div>
 
                 <div class="w-1/2">
@@ -22,13 +24,13 @@
                     <label for="harga" class="block mb-2 text-sm font-medium text-gray-900">Harga</label>
                     <input type="text" id="harga"
                         class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                        oninput="formatRupiah(this)" name="harga" value="" />
+                        oninput="formatRupiah(this)" name="harga" value="{{ $product->harga }}" />
                 </div>
                 <div class="w-1/2">
                     <label for="stok" class="block mb-2 text-sm font-medium text-gray-900">Stok</label>
                     <input type="number" id="stok"
                     class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                        name="stok" value="" disabled />
+                        name="stok" value="{{ $product->stok }}" disabled />
                 </div>
             </div>
             <div class="flex flex-row-reverse">
