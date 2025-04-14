@@ -1,28 +1,28 @@
 <x-layout>
-
     <x-card>
-        <form id="transactionForm" action="" method="post">
+        <form id="transactionForm" action="{{ route('storeTransaction') }}" method="post">
             @csrf
             <div class="w-full flex">
                 <input type="hidden" id="payment_clean" name="total_payment_clean" />
 
-
                 <div class="w-1/2">
                     <h6 class="text-3xl">Produk yang dipilih</h6>
+                    @foreach ($cart as $item)
                     <br>
-
-                    <input type="hidden" name="total_price" value="" />
-                        <div class="mb-4">
-                            <div></div>
-                            <div class="flex justify-between">
-                                <div>Rp. </div>
-                                <div>Rp. </div>
-                            </div>
-                        </div>
-
+                    {{ $item['nama_produk'] }}
+                    <input type="hidden" name="total_price" value="{{ collect($cart)->sum('subtotal') }}" />
+                    <div class="mb-4">
+                        <div></div>
                         <div class="flex justify-between">
+                            <div>Rp. {{ number_format($item['harga']) }} X {{ number_format($item['jumlah']) }}</div>
+                            <div>Rp. {{ number_format($item['subtotal']) }}</div>
+                        </div>
+                    </div>
+                    @endforeach
+
+                    <div class="flex justify-between">
                         <h6 class="text-2xl">Total</h6>
-                        <h6 class="text-2xl">Rp. </h6>
+                        <h6 class="text-2xl">Rp. {{ number_format(collect($cart)->sum('subtotal'))}}</h6>
                     </div>
                 </div>
 
@@ -34,7 +34,7 @@
                         <option value="MEMBER">Member</option>
                     </select>
                     <br>
-                    <div id="hp" class="hidden">
+                    <div id="hp" class="d-none">
                         <div>No Telepon<span class="text-red-400"> (daftar/gunakan member)</span></div>
                         <input type="number" id="no_hp"
                             class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -45,9 +45,9 @@
                     <input type="text" id="payment"
                         class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         oninput="formatRupiah(this); checkPayment();" name="total_payment"
-                        data-total="" />
+                        data-total="{{ collect($cart)->sum('subtotal') }}" />
 
-                    <span class="text-red-300 hidden" id="bayar">Jumlah bayar kurang</span>
+                    <span class="text-red-300 d-none" id="bayar">Jumlah bayar kurang</span>
                     <br>
                     <div class="flex w-full justify-end">
                         <button type="submit"
@@ -59,24 +59,23 @@
             </div>
         </form>
     </x-card>
-
 </x-layout>
 
 <script>
-    
-    document.getElementById("member").addEventListener("change", function() {
-        let phoneInput = document.getElementById('hp')
+    document.getElementById("member").addEventListener("change", function () {
+        let phoneInput = document.getElementById('hp');
         if (this.value === 'MEMBER') {
-            phoneInput.classList.remove('hidden');
+            phoneInput.classList.remove('d-none');
         } else {
-            phoneInput.classList.add('hidden');
+            phoneInput.classList.add('d-none');
         }
     });
 
     const paymentField = document.getElementById('payment');
     const paymentClean = document.getElementById('payment_clean');
     const bayarSpan = document.getElementById('bayar');
-    const total = parseInt(paymentField.dataset.total);
+
+    const total = Number(paymentField.dataset.total.replace(/[^\d]/g, '')) || 0;
 
     function formatRupiah(input) {
         let angka = input.value.replace(/[^\d]/g, '');
@@ -90,24 +89,23 @@
 
     function checkPayment() {
         let bayar = paymentField.value.replace(/[^\d]/g, '');
-        bayar = parseInt(bayar) || 0;
+        bayar = Number(bayar) || 0;
 
         // Update hidden input
         paymentClean.value = bayar;
 
-        // Cek apakah cukup
         if (bayar < total) {
-            bayarSpan.classList.remove('hidden');
+            bayarSpan.classList.remove('d-none');
         } else {
-            bayarSpan.classList.add('hidden');
+            bayarSpan.classList.add('d-none');
         }
     }
 
-    document.getElementById('transactionForm').addEventListener('submit', function(e) {
-        const bayar = parseInt(paymentClean.value) || 0;
+    document.getElementById('transactionForm').addEventListener('submit', function (e) {
+        const bayar = Number(paymentClean.value) || 0;
 
         if (bayar < total) {
-            e.preventDefault(); // Mencegah form submit
+            e.preventDefault();
 
             Swal.fire({
                 icon: 'warning',
@@ -118,14 +116,21 @@
 
             return false;
         }
+
+        if (bayar > 100000000000) {
+            e.preventDefault();
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Pembayaran Terlalu Besar!',
+                text: 'Jumlah yang dimasukkan melebihi batas maksimum.',
+                confirmButtonText: 'Oke'
+            });
+
+            return false;
+        }
     });
 
-    // Jalankan saat input berubah
-    paymentField.addEventListener('input', function() {
-        formatRupiah(this);
-        checkPayment();
-    });
-
-    // Jalankan sekali di awal
+    // Trigger sekali saat awal load
     checkPayment();
 </script>

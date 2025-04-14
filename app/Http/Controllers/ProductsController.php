@@ -80,7 +80,7 @@ class ProductsController extends Controller
 
             $request->validate([
                 'nama_produk' => 'required|string',
-                'harga' => 'required|string'
+                'harga' => 'required|string',
             ]);
 
             $harga = (int) str_replace(['Rp', '.', ','], '', $request->harga);
@@ -89,7 +89,11 @@ class ProductsController extends Controller
                 $product->gambar = $gambar;
             }
 
-            $product->harga = $request->harga;
+            if($harga > 100000000000){
+                return redirect()->back()->with('error','Jumlah Harga Terlalu Banyak Hingga Tidak Valid');
+            }
+
+            $product->harga = $harga;
             $product->nama_produk = $request->nama_produk;
             $product->save();
             return redirect()->route('products')->with('success','Berhasil Mengupdate Product');
@@ -118,7 +122,24 @@ class ProductsController extends Controller
         }
     }
 
-    public function updateStock(){
+    public function updateStock(Request $request, $id)
+    {
+        try {
 
+            $product = Products::findOrFail($id);
+
+            $request->validate([
+                'stok' => 'required|integer'
+            ]);
+
+            $product->stok = $request->stok;
+            $product->save();
+            return redirect()->route('products')->with('success','Berhasil Mengupdate Stock');
+
+        } catch (\Throwable $th) {
+            dd($th);
+        }
     }
+
+
 }

@@ -10,6 +10,6 @@ class Customers extends Model
 
     public function transaction()
     {
-        return $this->hasOne(Transaction::class);
+        return $this->hasOne(Transactions::class);
     }
 }

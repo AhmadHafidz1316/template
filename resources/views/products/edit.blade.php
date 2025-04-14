@@ -30,7 +30,7 @@
                     <label for="stok" class="block mb-2 text-sm font-medium text-gray-900">Stok</label>
                     <input type="number" id="stok"
                     class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                        name="stok" value="{{ $product->stok }}" disabled />
+                        name="stok" value="{{ $product->stok }}" min="0" disabled />
                 </div>
             </div>
             <div class="flex flex-row-reverse">

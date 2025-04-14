@@ -1,32 +1,31 @@
 <x-layout>
     <x-card>
-        <form action="" method="post" enctype="multipart/form-data">
+        <form action="{{ route('cart') }}" method="post" enctype="multipart/form-data">
+            @csrf
             <div class="grid grid-cols-3 gap-4">
-                @foreach ($product as $item)
-
-                @endforeach
-                    <input type="hidden" name="harga[product-id]" value="harga">
-                    <input type="hidden" name="nama_produk[product-id]" value="">
+                @foreach ($products as $product)
+                    <input type="hidden" name="harga[{{ $product->id }}]" value="{{ $product->harga }}">
+                    <input type="hidden" name="nama_produk[{{ $product->id }}]" value="{{ $product->nama_produk }}">
 
 
                     <div
                         class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 flex">
                         <!-- Gambar -->
-                        <img src="" class="w-1/3 object-cover rounded-l-lg"
-                            alt="">
+                        <img src="{{ asset('storage/' . $product->gambar) }}" class="w-1/3 object-cover rounded-l-lg"
+                            alt="{{ $product->nama_produk }}">
 
                         <!-- Konten -->
                         <div class="p-5 w-2/3 flex flex-col justify-between">
                             <a href="#">
                                 <h5 class="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
-
+                                    {{ $product->nama_produk }}
                                 </h5>
                             </a>
                             <p class="mb-3 text-sm text-gray-700 dark:text-gray-400">
-                                Stok
+                                Stok {{ $product->stok }}
                             </p>
                             <p class="mb-3 text-sm text-gray-700 dark:text-gray-400">
-                                Rp.
+                                Rp. {{ number_format($product->harga) }}
                             </p>
                             <td class="px-6 py-4">
                                 <div class="flex items-center">
@@ -40,9 +39,9 @@
                                         </svg>
                                     </button>
                                     <div>
-                                        <input type="number" name="jumlah[product-id]"
-                                            max="product-stock" data-stok="product-stock"
-                                            data-harga="product-harga"
+                                        <input type="number" name="jumlah[{{ $product->id }}]"
+                                            max="{{ $product->stok }}" data-stok="{{ $product->stok }}"
+                                            data-harga="{{ $product->harga }}"
                                             class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                             value="0" required readonly />
 
@@ -64,7 +63,7 @@
                             </p>
                         </div>
                     </div>
-
+                    @endforeach
             </div>
             <br>
             <div class="flex flex-col-reverse">

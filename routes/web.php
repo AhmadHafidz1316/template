@@ -16,6 +16,11 @@ Route::middleware(['auth'])->group(function (){
 Route::get('/dashboard',[AuthController::class,'dashboard'])->name('dashboard');
 Route::get('/products', [ProductsController::class, 'index'])->name('products');
 Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
+Route::get('/', [TransactionsController::class, 'index'])->name('transactions');
+Route::get('/invoice/{id}', [TransactionsController::class, 'invoice'])->name('invoice');
+Route::get('/view/{id}', [TransactionsController::class,'view'])->name('view');
+Route::get('/downloadExcel', [TransactionsController::class, 'downloadExcel'])->name('downloadExcel');
+Route::get('/downloadPDF/{id}', [TransactionsController::class, 'downloadPDF'])->name('downloadPDF');
 
 Route::middleware(['admin'])->group(function (){
     Route::prefix('/products')->group(function () {
@@ -37,12 +42,13 @@ Route::middleware(['admin'])->group(function (){
 });
 Route::middleware(['staff'])->group(function() {
     Route::prefix('/transactions')->group(function () {
-        Route::get('/', [TransactionsController::class, 'index'])->name('transactions');
         Route::get('/create', [TransactionsController::class, 'create'])->name('createTransaction');
+        Route::post('/cart', [TransactionsController::class, 'cart'])->name('cart');
+        Route::get('/checkout', [TransactionsController::class, 'checkout'])->name('checkout');
         Route::post('/store', [TransactionsController::class, 'store'])->name('storeTransaction');
-        Route::get('/edit/{id}', [TransactionsController::class, 'edit'] )->name('editTransaction');
-        Route::patch('/update/{id}', [TransactionsController::class, 'update'] )->name('updateTransaction');
-        Route::delete('/delete/{id}', [TransactionsController::class, 'destroy'])->name('deleteTransaction');
+        Route::get('/member/{id}', [TransactionsController::class, 'member'])->name('member');
+        Route::post('/updateMember', [TransactionsController::class, 'updateMember'])->name('updateMember');
+
     });
 });
 

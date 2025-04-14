@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Bukti Transaksi</title>
@@ -21,7 +22,8 @@
             margin-top: 10px;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #000;
             padding: 8px 10px;
             text-align: left;
@@ -38,24 +40,31 @@
         }
     </style>
 </head>
+
 <body>
     <h2>Bukti Transaksi</h2>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Nama Produk</th>
-            </tr>
-        </thead>
-        <tbody>
+        <table>
+            <thead>
                 <tr>
-                    <td></td>
+                    <th>Nama Produk</th>
+                    <th>Harga</th>
                 </tr>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <tr>
+                    @foreach ($transaction->detail as $item)
+                    <td>{{ $item->product->nama_produk }}</td>
+                    <td>Rp .{{ number_format($item->product->harga) }}</td>
+                    @endforeach
+
+                </tr>
+            </tbody>
+        </table>
+
 
     <div class="footer">
         Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
     </div>
 </body>
+
 </html>

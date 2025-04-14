@@ -1,18 +1,16 @@
 <x-layout>
 
-        {{-- <div class="my-50">
+    @if (Auth::user()->role == 'staff')
+        <div class="my-50">
             <x-card>
                 <div class="text-center">
                     Total Penjualan Hari Ini
                     <br>
-
+                    {{ App\Models\Transactions::whereDate('created_at', today())->count() }}
                 </div>
             </x-card>
         </div>
-
-
-
-
+    @else
         <div class="my-10 px-4">
             <x-card>
                 <h2 class="text-center text-lg font-bold mb-4">Grafik Penjualan {{ now()->year }}</h2>
@@ -84,6 +82,17 @@
                     }
                 }
             });
-        </script> --}}
-
+        </script>
+    @endif
 </x-layout>
+
+@if (session('success'))
+<script>
+    Swal.fire({
+        title: 'Success',
+        text: '{{ session('success') }}',
+        icon: "success",
+        draggable: true
+    });
+</script>
+@endif
